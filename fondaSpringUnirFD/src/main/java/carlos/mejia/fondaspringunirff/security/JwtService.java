@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
+	@Value("${jwt.secret:UnaClavePorDefectoDeEmergenciaParaQueArranqueElServicioYSeaLoSuficientementeLarga}")
     private String SECRET_KEY;
 
     // Obtiene el username (subject) del token
