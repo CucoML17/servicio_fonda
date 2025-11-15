@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  #1. Microservicio Principal (fondaSpringUnirF)
+  fondaspringunirf:
+
+    build: fondaSpringUnirFD
+    mem_limit: 512m
+    # El puerto del microservicio es 3010
+    ports:
+      - "3010:3010"
+    environment:
+      #La URL apunta al nombre del servicio de MySQL ('fonda_db') dentro de la red Docker
+      DB_URL: jdbc:mysql://fonda_db:3306/fondaf?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER_NAME: root
+      DB_PASSWORD: carlos12345678
+      JWT_SECRET: UnaClavePorDefectoDeEmergenciaParaQueArranqueElServicioYSeaLoSuficientementeLarga
+      
+    restart: always
+    volumes:
+      #Nuevo volumen para persistir las imágenes en la ruta requerida
+      - productos_imagenes_data:/app/imagenesFonda/productos
+    
+    depends_on:
+      #Dependencia del nuevo servicio de base de datos 'fonda_db'
+      fonda_db:
+        condition: service_healthy
+
+  # 2. Base de Datos MySQL (Específica para este microservicio)
+  fonda_db:
+    image: mysql:8.3.0
+    # Mapeamos a 3309 en el host (VM) para evitar un posible conflicto con 3308 del servicio Auth
+    ports:
+      - "3309:3306" 
+    environment:
+      MYSQL_ROOT_PASSWORD: carlos12345678
+      MYSQL_PASSWORD: carlos12345678
+      # Nombre de la BD que la aplicación usará
+      MYSQL_DATABASE: fondaf
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+      
+# Definición de los Volúmenes Persistentes
+volumes:
+  productos_imagenes_data:
+    driver: local
