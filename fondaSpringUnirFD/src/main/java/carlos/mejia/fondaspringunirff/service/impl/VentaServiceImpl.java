@@ -457,7 +457,7 @@ public class VentaServiceImpl implements VentaService {
         venta.getDetallesVenta().clear();
 
         // 4. ACTUALIZAR CAMPOS DE VENTA PRINCIPAL (similares al create)
-        venta.setFechaventa(LocalDate.now()); // Se puede actualizar la fecha o mantener la original
+        venta.setFechaventa(LocalDate.now(MEXICO_CITY_ZONE)); // Se puede actualizar la fecha o mantener la original
         venta.setIdCliente(ventaRequestDto.getIdCliente());
         venta.setIdReserva(ventaRequestDto.getIdReserva());
         venta.setEstado(0); // O el estado por defecto para una venta en proceso de edición.
