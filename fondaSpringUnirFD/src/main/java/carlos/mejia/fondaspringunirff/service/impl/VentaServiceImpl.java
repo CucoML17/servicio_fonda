@@ -2,6 +2,7 @@ package carlos.mejia.fondaspringunirff.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,9 @@ public class VentaServiceImpl implements VentaService {
     private final ProductoService productoService;
     
     
+    private static final ZoneId MEXICO_CITY_ZONE = ZoneId.of("America/Mexico_City");
+    
+    
     
     @Override
     public VentaDto createVenta(VentaRequestDto ventaRequestDto) {
@@ -94,7 +98,7 @@ public class VentaServiceImpl implements VentaService {
 
         //2. Crea ahora sí la venta
         Venta venta = new Venta();
-        venta.setFechaventa(LocalDate.now());
+        venta.setFechaventa(LocalDate.now(MEXICO_CITY_ZONE));
         
         //El ID del cliente se guarda tal como viene
         venta.setIdCliente(ventaRequestDto.getIdCliente()); 
