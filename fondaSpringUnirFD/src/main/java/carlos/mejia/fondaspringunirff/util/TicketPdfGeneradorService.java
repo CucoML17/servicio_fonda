@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.openpdf.text.Document;
@@ -33,9 +34,21 @@ public class TicketPdfGeneradorService {
 	private final ProductoService productoService;
 	private final ReservarFeignClient reservarFeignClient;
 	
+	private static final TimeZone MEXICO_CITY_TIMEZONE = TimeZone.getTimeZone("America/Mexico_City");
+	
 	// Formateadores para java.util.Date de los Feign DTOs
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+	private  SimpleDateFormat dateFormat;
+    private  SimpleDateFormat timeFormat;
+    
+    {
+        // 1. Inicializa y establece la Zona Horaria para la fecha
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormat.setTimeZone(MEXICO_CITY_TIMEZONE); // <--- APLICACIÓN CLAVE
+        
+        // 2. Inicializa y establece la Zona Horaria para la hora
+        timeFormat = new SimpleDateFormat("HH:mm");
+        timeFormat.setTimeZone(MEXICO_CITY_TIMEZONE); // <--- APLICACIÓN CLAVE
+    }    
 
     public byte[] generateTicketPdf(VentaDto venta, String nombreCliente, String nombreEmpleado) {
    
